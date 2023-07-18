@@ -1,16 +1,1 @@
-[
-    {
-        "id": "12345",
-        "title": "test1",
-        "imageUrl": "https://publicdomainpictures.net/pictures/210000/velka/books-isolated-on-white-background.jpg",
-        "description": "test1",
-        "price": "12"
-    },
-    {
-        "title": "Another products",
-        "imageUrl": "https://as2.ftcdn.net/jpg/05/62/74/61/220_F_562746115_A7LG5Q0Lk8EceCNXqGK0rHuqGC8v3DEN.jpg",
-        "description": "id Test",
-        "price": "12.89",
-        "id": "0.7296455922528422"
-    }
-]
+[]

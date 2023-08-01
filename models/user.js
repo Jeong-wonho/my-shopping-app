@@ -102,9 +102,17 @@ class User {
 
   addOrder() {
     const db = getDb();
-    return db
-      .collection("orders")
-      .insertOne(this.cart)
+    return this.getCart()
+      .then((product) => {
+        const order = {
+          items: product,
+          user: {
+            _id: new ObjectId(this._id),
+            name: this.name,
+          },
+        };
+        return db.collection("orders").insertOne(order);
+      })
       .then((result) => {
         this.cart = { items: [] };
         db.collection("users").updateOne(
@@ -113,6 +121,15 @@ class User {
         );
       });
   }
+
+  getOrders() {
+    const db = getDb();
+    return db
+      .collection("orders")
+      .find({ "user._id": new ObjectId(this._id) })
+      .toArray();
+  }
+  
   static findById(userId) {
     const db = getDb();
     return db

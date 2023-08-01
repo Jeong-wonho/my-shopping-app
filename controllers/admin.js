@@ -1,6 +1,5 @@
 const Product = require("../models/product");
 
-
 exports.getAddProduct = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
@@ -25,7 +24,14 @@ exports.postAddProduct = (req, res, next) => {
   //     description: description
   //   })
   /** this is mongoose code */
-  const product = new Product(title, price, description, imageUrl);
+  const product = new Product(
+    title,
+    price,
+    description,
+    imageUrl,
+    null,
+    req.user
+  );
   product
     .save()
     .then((result) => {

@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 
 const errorController = require("./controllers/error");
 const mongoConnect = require('./util/database').mongoConnect;
+const User = require('./models/user');
 // sequelize connection
 // const sequelize = require("./util/database");
 // const Product = require("./models/product");
@@ -26,14 +27,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  // User.findByPk(1)
-    // .then((user) => {
-    //   //user는 sequelize 객체이기 때문에 모든 sequelize 함수를 사용할 수 있다.
-    //   req.user = user;
-    //   next();
-    // })
-    // .catch((err) => console.log(err));
-    next();
+  User.findById("64c78bf7f1f46922083e5dd9")
+    .then((user) => {
+      console.log('user', user);
+      //user는 sequelize 객체이기 때문에 모든 sequelize 함수를 사용할 수 있다.
+      req.user = new User(user.name, user.email, user.cart, user._id);
+      next();
+    })
+    .catch((err) => console.log(err));
 });
 
 app.use("/admin", adminRoutes);

@@ -3,6 +3,10 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+const MongoDBURI =
+  "mongodb+srv://dnjsgh1204j:1234@cluster0.qgbajss.mongodb.net/shop?";
 
 const errorController = require("./controllers/error");
 // const mongoConnect = require("./util/database").mongoConnect;
@@ -18,6 +22,10 @@ const errorController = require("./controllers/error");
 const User = require("./models/user");
 
 const app = express();
+const store = new MongoDBStore({
+  uri: MongoDBURI,
+  collection: "sessions",
+});
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -28,16 +36,36 @@ const authRoutes = require("./routes/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  session({
+    secret: "my secret",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  })
+);
 
 app.use((req, res, next) => {
-  User.findById("64c9ebc47303281f74d9cf68")
-    .then((user) => {
-      //user는 sequelize 객체이기 때문에 모든 sequelize 함수를 사용할 수 있다.
-      req.user = user;
-      next();
-    })
-    .catch((err) => console.log(err));
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
+      .then(user => {
+        req.user = user;
+        next();
+      })
+      .catch(err => console.log(err));
 });
+
+// app.use((req, res, next) => {
+//   User.findById("64c9ebc47303281f74d9cf68")
+//     .then((user) => {
+//       //user는 sequelize 객체이기 때문에 모든 sequelize 함수를 사용할 수 있다.
+//       req.user = user;
+//       next();
+//     })
+//     .catch((err) => console.log(err));
+// });
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
@@ -47,11 +75,9 @@ app.use(errorController.get404);
 
 //mongoose connect
 mongoose
-  .connect(
-    "mongodb+srv://dnjsgh1204j:1234@cluster0.qgbajss.mongodb.net/shop?retryWrites=true"
-  )
+  .connect(MongoDBURI)
   .then((result) => {
-    User.findOne().then(user => {
+    User.findOne().then((user) => {
       if (!user) {
         const user = new User({
           name: "hou",
@@ -63,7 +89,7 @@ mongoose
         user.save();
       }
     });
-      app.listen(3000);
+    app.listen(3000);
   })
   .catch((err) => {
     console.log(err);

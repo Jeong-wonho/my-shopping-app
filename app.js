@@ -5,8 +5,11 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const csrf = require('csurf');
+
+//이건 비밀이지롱!
 const MongoDBURI =
-  "mongodb+srv://dnjsgh1204j:1234@cluster0.qgbajss.mongodb.net/shop?";
+  "mongodb+srv://dnjsgh1204j:password@cluster0.qgbajss.mongodb.net/shop?";
 
 const errorController = require("./controllers/error");
 // const mongoConnect = require("./util/database").mongoConnect;

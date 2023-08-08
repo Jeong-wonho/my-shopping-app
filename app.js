@@ -9,7 +9,7 @@ const csrf = require('csurf');
 
 //이건 비밀이지롱!
 const MongoDBURI =
-  "mongodb+srv://dnjsgh1204j:password@cluster0.qgbajss.mongodb.net/shop?";
+  "mongodb+srv://dnjsgh1204j:1234@cluster0.qgbajss.mongodb.net/shop?";
 
 const errorController = require("./controllers/error");
 // const mongoConnect = require("./util/database").mongoConnect;
@@ -29,6 +29,7 @@ const store = new MongoDBStore({
   uri: MongoDBURI,
   collection: "sessions",
 });
+const csrfProtection = csrf();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -48,6 +49,8 @@ app.use(
   })
 );
 
+app.use(csrfProtection);
+
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();
@@ -60,15 +63,12 @@ app.use((req, res, next) => {
       .catch(err => console.log(err));
 });
 
-// app.use((req, res, next) => {
-//   User.findById("64c9ebc47303281f74d9cf68")
-//     .then((user) => {
-//       //user는 sequelize 객체이기 때문에 모든 sequelize 함수를 사용할 수 있다.
-//       req.user = user;
-//       next();
-//     })
-//     .catch((err) => console.log(err));
-// });
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+  
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);

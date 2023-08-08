@@ -77,18 +77,6 @@ app.use(errorController.get404);
 mongoose
   .connect(MongoDBURI)
   .then((result) => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: "hou",
-          email: "hou@test.com",
-          cart: {
-            items: [],
-          },
-        });
-        user.save();
-      }
-    });
     app.listen(3000);
   })
   .catch((err) => {

@@ -1,6 +1,14 @@
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
+// send to email library
+const SibApiV3Sdk = require("sib-api-v3-sdk");
+
+SibApiV3Sdk.ApiClient.instance.authentications["api-key"].apiKey = process.env.MAIL_API;
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash("error");
@@ -85,6 +93,20 @@ exports.postSignup = (req, res, next) => {
         })
         .then((result) => {
           res.redirect("/login");
+          // send to email code add +
+          new SibApiV3Sdk.TransactionalEmailsApi().sendTransacEmail({
+            subject: "Hello from the Node SDK!",
+            sender: { email: "dnjsgh1204j@gmail.com", name: "hou" },
+            replyTo: { email: "dnjsgh1204j@gmail.com", name: "hou" },
+            to: [{ name: "jeong-wonho", email: email }],
+            htmlContent:
+              "<html><body><h1>This is a transactional email {{params.bodyMessage}}</h1></body></html>",
+            params: { bodyMessage: "Made just for you!" },
+          }).then(function(data) {
+            console.log(data);
+          }, function (error) {
+            console.log(error);
+          });
         });
     })
     .catch((err) => {
@@ -96,5 +118,19 @@ exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
     console.log(err);
     res.redirect("/");
+  });
+};
+
+exports.getReset = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render("auth/reset", {
+    path: "/reset",
+    pageTitle: "Reset Password",
+    errorMessage: message,
   });
 };

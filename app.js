@@ -7,10 +7,16 @@ const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
+const dotenv = require('dotenv');
+
+//dotenv add
+dotenv.config();
+
+//dotenv variable
+const dbUri = process.env.DB_URI
 
 //이건 비밀이지롱!
-const MongoDBURI =
-  "mongodb+srv://dnjsgh1204j:1234@cluster0.qgbajss.mongodb.net/shop?";
+const MongoDBURI = dbUri;
 
 const errorController = require("./controllers/error");
 // const mongoConnect = require("./util/database").mongoConnect;

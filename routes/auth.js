@@ -10,7 +10,18 @@ router.get("/login", authController.getLogin);
 
 router.get("/signup", authController.getSignup);
 
-router.post("/login", authController.postLogin);
+router.post(
+  "/login",
+  [
+    body("email").isEmail().withMessage("please enter a valid email address.")
+      .normalizeEmail(),
+    body("password", "password has to be valid.")
+      .isLength({ min: 5 })
+      .isAlphanumeric()
+      .trim(),
+  ],
+  authController.postLogin
+);
 
 router.post(
   "/signup",
@@ -19,10 +30,6 @@ router.post(
       .isEmail()
       .withMessage("Please enter a valid email.")
       .custom((value, { req }) => {
-        // if (value === "test@test.com") {
-        //   throw new Error("This email address if forbidden");
-        // }
-        // return true;
         return User.findOne({ email: value }).then((userDoc) => {
           if (userDoc) {
             return Promise.reject(
@@ -30,14 +37,15 @@ router.post(
             );
           }
         });
-      }),
+      }).normalizeEmail(),
     body(
       "password",
       "please enter a password with only numbers and text and at least 5 characters."
     )
       .isLength({ min: 5 })
-      .isAlphanumeric(),
-    body("confirmPassword").custom((value, { req }) => {
+      .isAlphanumeric()
+      .trim(),
+    body("confirmPassword").trim().custom((value, { req }) => {
       if (value !== req.body.password) {
         throw new Error("Password have to math!!");
       }

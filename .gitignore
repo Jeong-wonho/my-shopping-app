@@ -2,3 +2,4 @@ node_modules
 util/database.js
 app.js
 .env
+data

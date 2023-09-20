@@ -3,3 +3,4 @@ util/database.js
 app.js
 .env
 data
+images

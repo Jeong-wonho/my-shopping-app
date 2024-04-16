@@ -17,6 +17,8 @@ npm install
 ```
 npm start
 ```
+> dotenv 사용으로 MAIL_API, DB_URI 입력이 필요합니다. MailAPI 는 brevo API 에서 email API를 발급 받아서 사용했습니다. [brevo api](https://www.brevo.com/) DB_URL은 mongoDB Atlas의 무료 저장소를 사용했습니다.
+
 ## 기술 스택
 * node express
 * mongoose

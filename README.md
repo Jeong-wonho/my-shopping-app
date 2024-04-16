@@ -1,11 +1,36 @@
-# node.js
+# Node Shopping App
 
-* node js 로 파일업로드
-* crud 구현
-* cookie, session 활용
-* sequelize
-* mongodb, mongoose
-* MVC (ejs 활용)
-* 이메일 전송
-* 파일업로드 및 다운로드
+## 프로젝트 소개
+첫 nodejs 프로젝트 입니다. shopping몰을 구현하며 간단한 crud와 sequelize를 활용한 몽고 db활용, 결제, 이메일 서드파티 라이브러리를 사용했습니다.
+<img width="700" alt="스크린샷 2024-04-16 오후 2 45 45" src="https://github.com/Jeong-wonho/my-shopping-app/assets/67899479/d816a577-f721-4faf-ad15-3411e2888739">
+
+## 개발환경
+* visual studio code
+* node version 18.15
+* mongo db compass
+* github
+  
+## 실행방법
+```
+npm install
+```
+```
+npm start
+```
+## 기술 스택
+* node express
+* mongoose
+* mongoDB
+* bcrypt
+* brevo email api
+* express validator
+  
+## 주요기능
+* CRUD
+* MongoDB
+* 이메일 서드파티 라이브러리 사용
+* 유효성 검사
+* 파일 업로드 , 파일 다운로드
 * 페이지네이션
+
+
